@@ -1138,6 +1138,14 @@ class TestPostgres(Validator):
                 read="postgres",
             )
 
+        self.validate_all(
+            "CREATE TABLE t (a UUID) USING columnar",
+            write={
+                "duckdb": "CREATE TABLE t (a UUID)",
+                "postgres": "CREATE TABLE t (a UUID) USING columnar",
+            },
+        )
+
     def test_unnest(self):
         self.validate_identity(
             "SELECT * FROM UNNEST(ARRAY[1, 2], ARRAY['foo', 'bar', 'baz']) AS x(a, b)"

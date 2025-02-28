@@ -634,6 +634,18 @@ class Postgres(Dialect):
             exp.VolatileProperty: exp.Properties.Location.UNSUPPORTED,
         }
 
+        def with_properties(self, properties: exp.Properties) -> str:
+            # Table access method
+            sql = None
+            for i, e in enumerate(properties):
+                if e.key == exp.FileFormatProperty.key:
+                    sql = f"USING {self.sql(e, 'this')}"
+
+            if sql:
+                return sql
+
+            return super().with_properties(properties)
+
         def schemacommentproperty_sql(self, expression: exp.SchemaCommentProperty) -> str:
             self.unsupported("Table comments are not supported in the CREATE statement")
             return ""
